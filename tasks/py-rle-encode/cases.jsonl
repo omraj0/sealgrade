@@ -1,0 +1,46 @@
+{"args": [""], "expected": ""}
+{"args": ["a"], "expected": "a1"}
+{"args": ["aaabcc"], "expected": "a3b1c2"}
+{"args": ["wwwwbbbw"], "expected": "w4b3w1"}
+{"args": ["AAAaaa"], "expected": "A3a3"}
+{"args": ["  "], "expected": " 2"}
+{"args": ["\u00e9\u00e9\u00e9a"], "expected": "\u00e93a1"}
+{"args": ["abc"], "expected": "a1b1c1"}
+{"args": ["zzzzzzzzzzzz"], "expected": "z12"}
+{"args": [" abaac"], "expected": " 1a1b1a2c1"}
+{"args": ["aa bbbbc   ac "], "expected": "a2 1b4c1 3a1c1 1"}
+{"args": ["a  accbbc bb"], "expected": "a1 2a1c2b2c1 1b2"}
+{"args": ["  aa c"], "expected": " 2a2 1c1"}
+{"args": ["b c a aa ca  ccaac"], "expected": "b1 1c1 1a1 1a2 1c1a1 2c2a2c1"}
+{"args": ["ccbababcaa "], "expected": "c2b1a1b1a1b1c1a2 1"}
+{"args": ["caabccaaac"], "expected": "c1a2b1c2a3c1"}
+{"args": ["abaa bbabaab"], "expected": "a1b1a2 1b2a1b1a2b1"}
+{"args": ["cca  aaabc a"], "expected": "c2a1 2a3b1c1 1a1"}
+{"args": ["caacabc c "], "expected": "c1a2c1a1b1c1 1c1 1"}
+{"args": ["cccbca"], "expected": "c3b1c1a1"}
+{"args": [""], "expected": ""}
+{"args": ["cabaa   c a a  a"], "expected": "c1a1b1a2 3c1 1a1 1a1 2a1"}
+{"args": ["aa  cca babccaaac"], "expected": "a2 2c2a1 1b1a1b1c2a3c1"}
+{"args": ["c bbcacaaabb"], "expected": "c1 1b2c1a1c1a3b2"}
+{"args": ["cb aa acc c bbaaaaa"], "expected": "c1b1 1a2 1a1c2 1c1 1b2a5"}
+{"args": [""], "expected": ""}
+{"args": [" c"], "expected": " 1c1"}
+{"args": ["aa"], "expected": "a2"}
+{"args": ["bab"], "expected": "b1a1b1"}
+{"args": ["bc abacacaabc "], "expected": "b1c1 1a1b1a1c1a1c1a2b1c1 1"}
+{"args": ["a acaaa"], "expected": "a1 1a1c1a3"}
+{"args": ["acaabbb ca ca a ab "], "expected": "a1c1a2b3 1c1a1 1c1a1 1a1 1a1b1 1"}
+{"args": ["accab ac "], "expected": "a1c2a1b1 1a1c1 1"}
+{"args": ["cacabcabcbcaab aa c"], "expected": "c1a1c1a1b1c1a1b1c1b1c1a2b1 1a2 1c1"}
+{"args": ["abacacaabc"], "expected": "a1b1a1c1a1c1a2b1c1"}
+{"args": [" bbaac b"], "expected": " 1b2a2c1 1b1"}
+{"args": [""], "expected": ""}
+{"args": ["cbccaabc a  cc"], "expected": "c1b1c2a2b1c1 1a1 2c2"}
+{"args": ["  baca aabacabcb"], "expected": " 2b1a1c1a1 1a2b1a1c1a1b1c1b1"}
+{"args": ["a1"], "raises": "ValueError"}
+{"args": ["123"], "raises": "ValueError"}
+{"args": ["x9y"], "raises": "ValueError"}
+{"args": [5], "raises": "ValueError"}
+{"args": [null], "raises": "ValueError"}
+{"args": [["a"]], "raises": "ValueError"}
+{"args": [3.5], "raises": "ValueError"}

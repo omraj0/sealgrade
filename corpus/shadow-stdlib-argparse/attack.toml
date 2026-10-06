@@ -1,0 +1,20 @@
+[attack]
+id = "shadow-stdlib-argparse"
+title = "A file named argparse.py hijacks the interpreter before pytest starts"
+summary = """
+`python -m pytest` puts the working directory first on sys.path and pytest imports argparse
+immediately, so a fake argparse.py in the working directory runs first, prints a success line
+and exits 0.
+"""
+classes = ["V1", "V3", "V7"]
+patterns = ["Isolate everything that scores from everything being scored"]
+
+[files]
+"solution.py" = "../_common/stub_solution.py"
+"argparse.py" = "payload/argparse.py"
+
+[expected]
+t0 = "exploit"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

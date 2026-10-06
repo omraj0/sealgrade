@@ -1,0 +1,19 @@
+[attack]
+id = "atexit-forge-report"
+title = "An exit handler rewrites the test report and forces exit 0"
+summary = """
+The solution registers an atexit handler. After pytest has written its real report, the handler
+overwrites it with a perfect report that accounts for exactly the right number of tests, then
+exits 0. Works whenever the candidate shares a process with the test runner.
+"""
+classes = ["V3", "V7"]
+patterns = ["Never trust output from the code you are evaluating"]
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "exploit"
+t3 = "blocked"

@@ -1,0 +1,18 @@
+[attack]
+id = "frame-introspection-expected"
+title = "The solution walks the call stack to read the expected value"
+summary = """
+The function inspects its callers' local variables until it finds the grader's test case and
+returns the expected value it finds there. Works whenever candidate and tests share a process.
+"""
+classes = ["V1", "V7"]
+patterns = ["Monkey-patching and stack introspection"]
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "exploit"
+t3 = "blocked"

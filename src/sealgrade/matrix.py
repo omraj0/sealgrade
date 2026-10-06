@@ -207,7 +207,13 @@ def run_matrix(
     result = MatrixResult(tiers=tiers, attacks=attacks)
     harnesses = {tier: get_harness(tier) for tier in tiers}
     submissions = {attack.id: attack_submission(attack) for attack in attacks}
-    plan = [(tier, attack, task) for tier in tiers for attack in attacks for task in tasks]
+    plan = [
+        (tier, attack, task)
+        for tier in tiers
+        for attack in attacks
+        for task in tasks
+        if attack.applies_to(task)
+    ]
 
     def run_one(item: tuple[str, AttackSpec, TaskSpec]) -> Cell:
         tier, attack, task = item

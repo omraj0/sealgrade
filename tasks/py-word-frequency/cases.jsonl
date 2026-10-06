@@ -1,0 +1,53 @@
+{"args": [""], "expected": {}}
+{"args": ["Hello hello HELLO"], "expected": {"hello": 3}}
+{"args": ["Don't stop, don't STOP!"], "expected": {"don't": 2, "stop": 2}}
+{"args": ["'tis the season to be jolly"], "expected": {"be": 1, "jolly": 1, "season": 1, "the": 1, "tis": 1, "to": 1}}
+{"args": ["a-b c_d e.f"], "expected": {"a": 1, "b": 1, "c": 1, "d": 1, "e": 1, "f": 1}}
+{"args": ["one two  two   three three three"], "expected": {"one": 1, "three": 3, "two": 2}}
+{"args": ["it's 'quoted' text"], "expected": {"it's": 1, "quoted": 1, "text": 1}}
+{"args": ["numbers 123 are ignored"], "expected": {"are": 1, "ignored": 1, "numbers": 1}}
+{"args": ["O'Neil's O'neil's"], "expected": {"o'neil's": 2}}
+{"args": ["rock'n'roll"], "expected": {"rock'n'roll": 1}}
+{"args": ["''' ''"], "expected": {}}
+{"args": ["\u00dcn\u00efcode w\u00f6rds"], "expected": {"code": 1, "n": 1, "rds": 1, "w": 1}}
+{"args": ["The the THE tHe"], "expected": {"the": 4}}
+{"args": ["dog - on\nrun - x1 don't  dog\nCat, It's  run - "], "expected": {"cat": 1, "dog": 2, "don't": 1, "it's": 1, "on": 1, "run": 2, "x": 1}}
+{"args": ["the, "], "expected": {"the": 1}}
+{"args": ["Dog, Cat on, run\nsat\non, dog, dog - x1 - "], "expected": {"cat": 1, "dog": 3, "on": 2, "run": 1, "sat": 1, "x": 1}}
+{"args": ["It's\nIt's! 'quoted'  don't - x1 - "], "expected": {"don't": 1, "it's": 2, "quoted": 1, "x": 1}}
+{"args": ["dog It's  dog, It's\non! x1  mat, "], "expected": {"dog": 2, "it's": 2, "mat": 1, "on": 1, "x": 1}}
+{"args": ["run\n"], "expected": {"run": 1}}
+{"args": [""], "expected": {}}
+{"args": ["'quoted' Cat! dog  Dog  dog sat! Dog, "], "expected": {"cat": 1, "dog": 4, "quoted": 1, "sat": 1}}
+{"args": ["on on. the\nx1 dog, "], "expected": {"dog": 1, "on": 2, "the": 1, "x": 1}}
+{"args": ["sat, Dog  dog - x1. "], "expected": {"dog": 2, "sat": 1, "x": 1}}
+{"args": ["sat - 'quoted' - Cat\nx1\nDog 'quoted'\n"], "expected": {"cat": 1, "dog": 1, "quoted": 2, "sat": 1, "x": 1}}
+{"args": ["on! run  dog Cat! Dog\nx1 - run. "], "expected": {"cat": 1, "dog": 2, "on": 1, "run": 2, "x": 1}}
+{"args": ["'quoted'! Dog! run! don't  "], "expected": {"dog": 1, "don't": 1, "quoted": 1, "run": 1}}
+{"args": [""], "expected": {}}
+{"args": ["x1. on  on  don't  "], "expected": {"don't": 1, "on": 2, "x": 1}}
+{"args": ["mat - x1 - 'quoted'  Dog  mat\nx1\nsat. run, don't, "], "expected": {"dog": 1, "don't": 1, "mat": 2, "quoted": 1, "run": 1, "sat": 1, "x": 2}}
+{"args": ["run - don't on. on! on! x1. the - Cat! don't, "], "expected": {"cat": 1, "don't": 2, "on": 3, "run": 1, "the": 1, "x": 1}}
+{"args": ["don't  don't, run\n"], "expected": {"don't": 2, "run": 1}}
+{"args": ["don't - It's. 'quoted' - the\nrun, "], "expected": {"don't": 1, "it's": 1, "quoted": 1, "run": 1, "the": 1}}
+{"args": ["It's - "], "expected": {"it's": 1}}
+{"args": ["'quoted' - the  Cat\nIt's - Cat, "], "expected": {"cat": 2, "it's": 1, "quoted": 1, "the": 1}}
+{"args": ["sat! 'quoted'\n'quoted' Dog  the. "], "expected": {"dog": 1, "quoted": 2, "sat": 1, "the": 1}}
+{"args": [""], "expected": {}}
+{"args": ["dog! mat\nDog - x1 x1  Dog  on  on sat - "], "expected": {"dog": 3, "mat": 1, "on": 2, "sat": 1, "x": 2}}
+{"args": ["It's, It's\ndon't - mat sat\ndon't! on - 'quoted'. "], "expected": {"don't": 2, "it's": 2, "mat": 1, "on": 1, "quoted": 1, "sat": 1}}
+{"args": [""], "expected": {}}
+{"args": ["the, It's  don't the\n"], "expected": {"don't": 1, "it's": 1, "the": 2}}
+{"args": ["mat  sat Dog dog dog - mat\nCat - "], "expected": {"cat": 1, "dog": 3, "mat": 2, "sat": 1}}
+{"args": ["Cat! the\nthe. the. dog  run\nx1, Cat\nmat\n"], "expected": {"cat": 2, "dog": 1, "mat": 1, "run": 1, "the": 3, "x": 1}}
+{"args": ["don't - dog. don't - dog\nCat - It's  sat! dog, "], "expected": {"cat": 1, "dog": 3, "don't": 2, "it's": 1, "sat": 1}}
+{"args": ["sat. sat! 'quoted'. mat "], "expected": {"mat": 1, "quoted": 1, "sat": 2}}
+{"args": [""], "expected": {}}
+{"args": ["It's, run  dog\ndon't\n"], "expected": {"dog": 1, "don't": 1, "it's": 1, "run": 1}}
+{"args": ["don't, run! the, don't - mat! x1! "], "expected": {"don't": 2, "mat": 1, "run": 1, "the": 1, "x": 1}}
+{"args": ["sat! 'quoted' don't - x1, mat! 'quoted' 'quoted' - "], "expected": {"don't": 1, "mat": 1, "quoted": 3, "sat": 1, "x": 1}}
+{"args": ["x1\ndog the! x1 the. don't - the\n"], "expected": {"dog": 1, "don't": 1, "the": 3, "x": 2}}
+{"args": ["Dog - 'quoted' run. It's\n"], "expected": {"dog": 1, "it's": 1, "quoted": 1, "run": 1}}
+{"args": [""], "expected": {}}
+{"args": ["run! It's  'quoted' - don't sat, It's - on - x1 - 'quoted'. "], "expected": {"don't": 1, "it's": 2, "on": 1, "quoted": 2, "run": 1, "sat": 1, "x": 1}}
+{"args": ["Cat! don't  the - mat on  don't. run - dog - "], "expected": {"cat": 1, "dog": 1, "don't": 2, "mat": 1, "on": 1, "run": 1, "the": 1}}

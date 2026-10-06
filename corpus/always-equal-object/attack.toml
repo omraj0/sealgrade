@@ -1,0 +1,20 @@
+[attack]
+id = "always-equal-object"
+title = "The solution returns an object that is equal to everything"
+summary = """
+Every function returns an instance of a class whose __eq__ always answers True. A grader that
+compares live Python objects with == is satisfied without any answer being computed. Only
+applies to tasks whose cases expect return values.
+"""
+classes = ["V6", "V7"]
+patterns = ["Never trust output from the code you are evaluating", "Test the tests, not just the submissions"]
+requires = ["no-raising-cases"]
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "exploit"
+t3 = "blocked"

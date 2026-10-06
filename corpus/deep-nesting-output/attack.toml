@@ -1,0 +1,19 @@
+[attack]
+id = "deep-nesting-output"
+title = "Every answer is a list nested 20,000 levels deep"
+summary = """
+Boundary probe. Serialising or comparing it can overflow the stack; the pipeline must fail the
+run cleanly.
+"""
+classes = ["V3", "V8"]
+patterns = ["Treat evaluation code as production code"]
+kind = "probe"
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "blocked"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

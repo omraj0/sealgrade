@@ -1,0 +1,19 @@
+[attack]
+id = "exec-results-directory"
+title = "The results path is turned into a directory"
+summary = """
+Boundary probe, aimed at the strict tier's output channel: the path the controller will copy
+out is a directory, not a file.
+"""
+classes = ["V1", "V3"]
+patterns = ["Never trust output from the code you are evaluating"]
+kind = "probe"
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "blocked"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

@@ -1,0 +1,20 @@
+[attack]
+id = "conftest-skip-all"
+title = "conftest.py marks every test as skipped"
+summary = """
+Skipped tests are neither failures nor errors, so the exit code is 0 and a report checker
+that only counts failures sees none. Only a grader that also requires every expected test to
+have actually run notices.
+"""
+classes = ["V6", "V7"]
+patterns = ["Test the tests, not just the submissions"]
+
+[files]
+"solution.py" = "../_common/stub_solution.py"
+"conftest.py" = "payload/conftest.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "blocked"
+t3 = "blocked"

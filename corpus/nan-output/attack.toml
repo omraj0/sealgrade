@@ -1,0 +1,19 @@
+[attack]
+id = "nan-output"
+title = "Every answer is NaN"
+summary = """
+Boundary probe. NaN is not a JSON number; a comparison pipeline must not choke on it or treat
+it as a match.
+"""
+classes = ["V6"]
+patterns = ["Make tolerances and baselines honest"]
+kind = "probe"
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "blocked"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

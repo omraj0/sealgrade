@@ -1,0 +1,18 @@
+[attack]
+id = "setup-cfg-collect-only"
+title = "setup.cfg switches the run to --collect-only"
+summary = """
+The same trick through setup.cfg, the oldest of pytest's configuration files.
+"""
+classes = ["V3", "V6", "V7"]
+patterns = ["Trusting a process exit code"]
+
+[files]
+"solution.py" = "../_common/stub_solution.py"
+"setup.cfg" = "payload/setup.cfg"
+
+[expected]
+t0 = "exploit"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

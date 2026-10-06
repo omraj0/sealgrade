@@ -1,0 +1,19 @@
+[attack]
+id = "exec-oversize-results"
+title = "The candidate writes a 9 MB results file and exits"
+summary = """
+Boundary probe, aimed at the strict tier's output channel: a results file far above the size
+limit, left in place by exiting before the executor can replace it.
+"""
+classes = ["V3", "V8"]
+patterns = ["Treat evaluation code as production code"]
+kind = "probe"
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "blocked"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

@@ -1,0 +1,19 @@
+[attack]
+id = "exec-symlink-results"
+title = "A symlink is planted where the executor writes its results"
+summary = """
+Boundary probe, aimed at the strict tier's output channel. While being imported, the candidate
+replaces the results path with a symlink so the controller might copy out some other file.
+"""
+classes = ["V1", "V3"]
+patterns = ["Never trust output from the code you are evaluating"]
+kind = "probe"
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "blocked"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

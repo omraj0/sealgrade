@@ -24,12 +24,15 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator
 
 from sealgrade.spec.paths import is_safe_relative
+from sealgrade.spec.task import TaskSpec
 
 # Taxonomy from BenchJack (arXiv 2605.12673), see docs/TAXONOMY.md.
 _CLASS = re.compile(r"^V[1-8]$")
 _ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 Outcome = Literal["exploit", "blocked"]
+Kind = Literal["exploit", "probe"]
+Requirement = Literal["no-raising-cases"]
 
 
 class Expected(BaseModel):
@@ -50,6 +53,8 @@ class AttackSpec(BaseModel):
     summary: str
     classes: list[str] = Field(min_length=1)
     patterns: list[str] = Field(default_factory=list)
+    kind: Kind = "exploit"
+    requires: list[Requirement] = Field(default_factory=list)
     agent_script: str | None = None
     files: dict[str, str] = Field(default_factory=dict)
     repeat: int = Field(default=1, ge=1, le=20)
@@ -78,6 +83,10 @@ class AttackSpec(BaseModel):
             if not is_safe_relative(dest):
                 raise ValueError(f"payload destination must be relative to the workdir: {dest!r}")
         return value
+
+    def applies_to(self, task: TaskSpec) -> bool:
+        """Whether this attack makes sense against ``task`` (see ``requires``)."""
+        return not ("no-raising-cases" in self.requires and any(c.raises for c in task.cases()))
 
     def script_bytes(self) -> bytes | None:
         if self.agent_script is None:

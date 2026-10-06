@@ -16,4 +16,5 @@ agent_script = "agent.sh"
 [expected]
 t0 = "exploit"
 t1 = "blocked"
+t2 = "blocked"
 t3 = "blocked"

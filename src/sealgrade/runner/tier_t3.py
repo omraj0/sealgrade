@@ -25,7 +25,6 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from sealgrade.runner import verdict as signing
-from sealgrade.runner.common import agent_env
 from sealgrade.runner.docker_backend import client, unique_name
 from sealgrade.runner.firewall import (
     RESULT_LIMITS,
@@ -36,13 +35,13 @@ from sealgrade.runner.firewall import (
 from sealgrade.runner.models import Submission, Verdict
 from sealgrade.runner.phases import RunContext, Upload, run_phase
 from sealgrade.runner.policy import ContainerPolicy
+from sealgrade.runner.stages import run_agent_stage
 from sealgrade.runner.strict_assets import ensure_runtime_image
 from sealgrade.spec.task import TaskSpec
 
 EXEC_TIMEOUT_SEC = 60
 JUDGE_TIMEOUT_SEC = 30
 CASE_TIMEOUT_SEC = 5
-AGENT_UID = 10001
 
 
 class _Failure(BaseModel):
@@ -95,54 +94,12 @@ class T3Strict:
         timings: dict[str, float],
     ) -> tuple[float, str, dict[str, Any] | None]:
         policy = self.policy
-        workdir = task.agent.workdir
 
-        # 1. AGENT PHASE -------------------------------------------------------------------
-        agent_files: dict[str, Upload] = {
-            name: Upload(data, mode=0o644, uid=AGENT_UID) for name, data in submission.files.items()
-        }
-        agent_files["INSTRUCTION.md"] = Upload(
-            task.instruction_text().encode(), mode=0o644, uid=AGENT_UID
-        )
-        if submission.script is not None:
-            agent_files["agent.sh"] = Upload(submission.script, mode=0o755, uid=AGENT_UID)
-            command = [
-                "timeout",
-                "-k",
-                "2",
-                str(task.agent.timeout_sec),
-                "bash",
-                f"{workdir}/agent.sh",
-            ]
-        else:
-            command = ["true"]
-        agent = run_phase(
-            ctx,
-            name="agent",
-            image=image,
-            command=command,
-            policy=policy,
-            mounts={workdir: "work"},
-            uploads={workdir: agent_files},
-            env=agent_env(task, submission),
-            timeout_sec=task.agent.timeout_sec + 10,
-        )
-        timings["agent"] = round(agent.elapsed_sec, 3)
-
-        # 2. ARTIFACT FIREWALL -------------------------------------------------------------
-        artifacts: dict[str, bytes] = {}
-        for name in task.agent.artifacts:
-            try:
-                data = fetch_file(agent.container, f"{workdir}/{name}")
-            except FirewallError as exc:
-                return self._refuse(f"artifact {name!r}: {exc}")
-            if data is None:
-                return self._refuse(f"artifact {name!r} was not produced")
-            try:
-                data.decode("utf-8")
-            except UnicodeDecodeError:
-                return self._refuse(f"artifact {name!r} is not valid UTF-8")
-            artifacts[name] = data
+        # 1 + 2. AGENT PHASE AND ARTIFACT FIREWALL ------------------------------------------
+        staged = run_agent_stage(ctx, image, task, submission, policy, timings)
+        if isinstance(staged, str):
+            return self._refuse(staged)
+        artifacts = staged
 
         # 3. CANDIDATE EXECUTION ------------------------------------------------------------
         cases = task.cases()

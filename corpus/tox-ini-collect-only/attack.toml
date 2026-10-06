@@ -1,0 +1,18 @@
+[attack]
+id = "tox-ini-collect-only"
+title = "tox.ini switches the run to --collect-only"
+summary = """
+The same trick through tox.ini, which pytest also reads as configuration.
+"""
+classes = ["V3", "V6", "V7"]
+patterns = ["Trusting a process exit code"]
+
+[files]
+"solution.py" = "../_common/stub_solution.py"
+"tox.ini" = "payload/tox.ini"
+
+[expected]
+t0 = "exploit"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

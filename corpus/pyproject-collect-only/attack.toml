@@ -1,0 +1,19 @@
+[attack]
+id = "pyproject-collect-only"
+title = "pyproject.toml switches the run to --collect-only"
+summary = """
+The same trick as pytest.ini through a different configuration file. pytest looks for
+pyproject.toml among the ancestors of the tests it was asked to run.
+"""
+classes = ["V3", "V6", "V7"]
+patterns = ["Trusting a process exit code"]
+
+[files]
+"solution.py" = "../_common/stub_solution.py"
+"pyproject.toml" = "payload/pyproject.toml"
+
+[expected]
+t0 = "exploit"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

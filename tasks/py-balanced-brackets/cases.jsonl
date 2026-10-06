@@ -1,0 +1,61 @@
+{"args": [""], "expected": true}
+{"args": ["()"], "expected": true}
+{"args": ["([]{})"], "expected": true}
+{"args": ["(]"], "expected": false}
+{"args": ["([)]"], "expected": false}
+{"args": ["(("], "expected": false}
+{"args": ["))"], "expected": false}
+{"args": ["a(b)c"], "expected": true}
+{"args": ["{[()]}"], "expected": true}
+{"args": ["{[(])}"], "expected": false}
+{"args": ["no brackets"], "expected": true}
+{"args": [")("], "expected": false}
+{"args": ["(()"], "expected": false}
+{"args": ["[({})]"], "expected": true}
+{"args": ["{{{{}}}}"], "expected": true}
+{"args": ["([{}])("], "expected": false}
+{"args": ["x"], "expected": true}
+{"args": ["]({}x"], "expected": false}
+{"args": ["}{[[x"], "expected": false}
+{"args": [" ({} []}{{))"], "expected": false}
+{"args": ["(){}x{( x["], "expected": false}
+{"args": ["x(x[])}{x]xx)"], "expected": false}
+{"args": ["(  {["], "expected": false}
+{"args": [""], "expected": true}
+{"args": [")x[x {][x{"], "expected": false}
+{"args": ["]){{{"], "expected": false}
+{"args": [""], "expected": true}
+{"args": [""], "expected": true}
+{"args": ["[]{((][)"], "expected": false}
+{"args": ["([]x[[]((("], "expected": false}
+{"args": [" x)([[}([x( ] "], "expected": false}
+{"args": [" })[] "], "expected": false}
+{"args": ["x]({}x )]]"], "expected": false}
+{"args": ["}x}([ "], "expected": false}
+{"args": ["(] ()"], "expected": false}
+{"args": ["}]}"], "expected": false}
+{"args": [" (}]"], "expected": false}
+{"args": ["x)x({[{} ((]"], "expected": false}
+{"args": ["({x)) "], "expected": false}
+{"args": [")()(( x}x)) "], "expected": false}
+{"args": ["["], "expected": false}
+{"args": [" } {[])(]}"], "expected": false}
+{"args": [")](]{][ x]){"], "expected": false}
+{"args": ["]]{[]"], "expected": false}
+{"args": ["]}( (x]{xx(][ "], "expected": false}
+{"args": [" {["], "expected": false}
+{"args": [" [)x  x ([}} ]"], "expected": false}
+{"args": [" [}] x{([]  {"], "expected": false}
+{"args": [" }]]{(}x"], "expected": false}
+{"args": [" (x[([{ ("], "expected": false}
+{"args": ["}([}[ (x  "], "expected": false}
+{"args": ["[])[){"], "expected": false}
+{"args": ["]x({("], "expected": false}
+{"args": ["x"], "expected": true}
+{"args": ["[)}"], "expected": false}
+{"args": ["}([)({  (x"], "expected": false}
+{"args": ["( ) }x{[[) } "], "expected": false}
+{"args": [5], "raises": "TypeError"}
+{"args": [null], "raises": "TypeError"}
+{"args": [["("]], "raises": "TypeError"}
+{"args": [true], "raises": "TypeError"}

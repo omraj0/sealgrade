@@ -1,0 +1,59 @@
+{"args": [12, 18], "expected": [6, 36]}
+{"args": [1, 1], "expected": [1, 1]}
+{"args": [7, 13], "expected": [1, 91]}
+{"args": [100, 10], "expected": [10, 100]}
+{"args": [21, 6], "expected": [3, 42]}
+{"args": [17, 17], "expected": [17, 17]}
+{"args": [1, 99], "expected": [1, 99]}
+{"args": [48, 180], "expected": [12, 720]}
+{"args": [1048576, 1024], "expected": [1024, 1048576]}
+{"args": [999999937, 2], "expected": [1, 1999999874]}
+{"args": [439, 401], "expected": [1, 176039]}
+{"args": [103, 169], "expected": [1, 17407]}
+{"args": [400, 33], "expected": [1, 13200]}
+{"args": [443, 235], "expected": [1, 104105]}
+{"args": [258, 488], "expected": [2, 62952]}
+{"args": [280, 406], "expected": [14, 8120]}
+{"args": [60, 427], "expected": [1, 25620]}
+{"args": [114, 449], "expected": [1, 51186]}
+{"args": [29, 317], "expected": [1, 9193]}
+{"args": [140, 132], "expected": [4, 4620]}
+{"args": [295, 436], "expected": [1, 128620]}
+{"args": [474, 96], "expected": [6, 7584]}
+{"args": [375, 277], "expected": [1, 103875]}
+{"args": [261, 473], "expected": [1, 123453]}
+{"args": [26, 123], "expected": [1, 3198]}
+{"args": [443, 409], "expected": [1, 181187]}
+{"args": [65, 460], "expected": [5, 5980]}
+{"args": [328, 57], "expected": [1, 18696]}
+{"args": [39, 302], "expected": [1, 11778]}
+{"args": [404, 476], "expected": [4, 48076]}
+{"args": [114, 311], "expected": [1, 35454]}
+{"args": [386, 420], "expected": [2, 81060]}
+{"args": [109, 449], "expected": [1, 48941]}
+{"args": [281, 257], "expected": [1, 72217]}
+{"args": [33, 451], "expected": [11, 1353]}
+{"args": [377, 50], "expected": [1, 18850]}
+{"args": [349, 464], "expected": [1, 161936]}
+{"args": [352, 249], "expected": [1, 87648]}
+{"args": [1, 421], "expected": [1, 421]}
+{"args": [40, 285], "expected": [5, 2280]}
+{"args": [53, 353], "expected": [1, 18709]}
+{"args": [88, 403], "expected": [1, 35464]}
+{"args": [47, 321], "expected": [1, 15087]}
+{"args": [299, 473], "expected": [1, 141427]}
+{"args": [22, 291], "expected": [1, 6402]}
+{"args": [422, 17], "expected": [1, 7174]}
+{"args": [173, 281], "expected": [1, 48613]}
+{"args": [492, 365], "expected": [1, 179580]}
+{"args": [59, 462], "expected": [1, 27258]}
+{"args": [151, 50], "expected": [1, 7550]}
+{"args": [0, 5], "raises": "ValueError"}
+{"args": [5, 0], "raises": "ValueError"}
+{"args": [-3, 6], "raises": "ValueError"}
+{"args": [3, -6], "raises": "ValueError"}
+{"args": [2.5, 5], "raises": "ValueError"}
+{"args": ["4", 6], "raises": "ValueError"}
+{"args": [true, 3], "raises": "ValueError"}
+{"args": [3, null], "raises": "ValueError"}
+{"args": [null, null], "raises": "ValueError"}

@@ -5,20 +5,40 @@ from __future__ import annotations
 import io
 import shlex
 import tarfile
+import time
 import uuid
 from collections.abc import Iterable, Mapping
 from pathlib import PurePosixPath
 from typing import Any
 
 import docker
-from docker.errors import DockerException
+from docker.errors import APIError, DockerException
 
 LABEL = "io.sealgrade.managed"
+DAEMON_TIMEOUT_SEC = 180  # per API call; never wait forever on a stuck daemon
+
+
+def retry_docker(call: Any, *, attempts: int = 4, base_delay: float = 0.5) -> Any:
+    """Run an *idempotent* Docker API call, retrying transient server errors (HTTP 5xx).
+
+    Docker Desktop occasionally answers 500 under sustained load. Retrying is only safe for calls
+    that have no side effect until they succeed (creating an exec, copying files, starting a
+    container), so this is applied selectively, never to running a command.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            return call()
+        except APIError as exc:
+            status = exc.status_code or 0
+            if status < 500 or attempt == attempts:
+                raise
+            time.sleep(base_delay * attempt)
+    raise AssertionError("unreachable")
 
 
 def client() -> Any:
     """A Docker client from the environment (DOCKER_HOST, Docker Desktop pipe, ...)."""
-    return docker.from_env()
+    return docker.from_env(timeout=DAEMON_TIMEOUT_SEC)
 
 
 def docker_available() -> bool:
@@ -81,7 +101,8 @@ def put_files(
 ) -> None:
     """Copy ``files`` into ``dest_dir`` inside a running container."""
     if files:
-        container.put_archive(dest_dir, make_tar(files, executable=executable))
+        archive = make_tar(files, executable=executable)
+        retry_docker(lambda: container.put_archive(dest_dir, archive))
 
 
 def exec_bash(
@@ -98,9 +119,16 @@ def exec_bash(
     Returns ``(exit_code, combined_output)``; exit code 124 means the limit was hit.
     """
     command = ["timeout", "-k", "2", str(timeout), "bash", "-c", script]
-    result = container.exec_run(command, user=user, workdir=workdir, environment=dict(env or {}))
-    output = result.output.decode("utf-8", errors="replace") if result.output else ""
-    return int(result.exit_code), output
+    api = container.client.api
+    exec_id = retry_docker(
+        lambda: api.exec_create(
+            container.id, command, user=user, workdir=workdir, environment=dict(env or {})
+        )
+    )["Id"]
+    raw = api.exec_start(exec_id)
+    output = raw.decode("utf-8", errors="replace") if raw else ""
+    exit_code = api.exec_inspect(exec_id).get("ExitCode")
+    return int(exit_code if exit_code is not None else -1), output
 
 
 def read_text(container: Any, path: str, *, tail_bytes: int | None = None) -> str | None:

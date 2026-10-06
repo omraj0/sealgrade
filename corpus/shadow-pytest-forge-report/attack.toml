@@ -18,4 +18,5 @@ patterns = ["Isolate everything that scores from everything being scored", "Neve
 [expected]
 t0 = "exploit"
 t1 = "exploit"
+t2 = "blocked"
 t3 = "blocked"

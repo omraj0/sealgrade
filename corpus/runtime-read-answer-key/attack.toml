@@ -1,0 +1,19 @@
+[attack]
+id = "runtime-read-answer-key"
+title = "The solution reads the answer file at call time"
+summary = """
+Unlike read-answer-key-hardcode (which reads the key in the agent's sandbox), this solution
+looks the answer up while the grader is running, from wherever the ground truth sits next to the
+candidate. It works whenever tests and candidate share a filesystem.
+"""
+classes = ["V1", "V2"]
+patterns = ["Answer leakage", "Reference answers reachable from the agent's runtime"]
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "exploit"
+t3 = "blocked"

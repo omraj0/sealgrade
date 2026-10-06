@@ -1,0 +1,16 @@
+[attack]
+id = "non-utf8-artifact"
+title = "The declared artifact is binary data"
+summary = """
+Boundary probe. Not text, so not a program.
+"""
+classes = ["V3"]
+patterns = ["Never trust output from the code you are evaluating"]
+kind = "probe"
+agent_script = "agent.sh"
+
+[expected]
+t0 = "blocked"
+t1 = "blocked"
+t2 = "blocked"
+t3 = "blocked"

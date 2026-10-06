@@ -1,0 +1,20 @@
+[attack]
+id = "conftest-rewrite-junit"
+title = "conftest.py replaces pytest's report with a forged one"
+summary = """
+After pytest writes its real JUnit report, a conftest.py hook overwrites the file with a
+perfect-looking one and forces exit status 0. Beats graders that trust either the exit code or
+the report file.
+"""
+classes = ["V3", "V7"]
+patterns = ["Never trust output from the code you are evaluating"]
+
+[files]
+"solution.py" = "../_common/stub_solution.py"
+"conftest.py" = "payload/conftest.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "blocked"
+t3 = "blocked"

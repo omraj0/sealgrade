@@ -100,9 +100,11 @@ def fetch_file(
     """
     from docker.errors import NotFound
 
+    from sealgrade.runner.docker_backend import retry_docker
+
     expected_name = PurePosixPath(path).name
     try:
-        stream, _stat = container.get_archive(path)  # type: ignore[attr-defined]
+        stream, _stat = retry_docker(lambda: container.get_archive(path))  # type: ignore[attr-defined]
     except NotFound:
         return None
     archive = read_stream(stream, limits.max_file_bytes + limits.stream_overhead_bytes)

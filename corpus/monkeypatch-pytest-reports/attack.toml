@@ -1,0 +1,19 @@
+[attack]
+id = "monkeypatch-pytest-reports"
+title = "Importing the solution patches pytest so every report says passed"
+summary = """
+On import the solution patches pytest's TestReport factory. Every later report, including the
+ones for failed tests, is rewritten to passed. Works whenever the candidate is imported into the
+test runner's process.
+"""
+classes = ["V3", "V7"]
+patterns = ["Monkey-patching and stack introspection"]
+
+[files]
+"solution.py" = "payload/solution.py"
+
+[expected]
+t0 = "exploit"
+t1 = "exploit"
+t2 = "exploit"
+t3 = "blocked"

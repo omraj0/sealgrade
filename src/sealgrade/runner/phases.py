@@ -22,7 +22,7 @@ from typing import Any
 
 import requests
 
-from sealgrade.runner.docker_backend import LABEL, make_tar
+from sealgrade.runner.docker_backend import LABEL, make_tar, retry_docker
 from sealgrade.runner.policy import ContainerPolicy, audit_effective_config
 
 
@@ -115,10 +115,13 @@ def run_phase(
             for rel, upload in group.items():
                 by_mode.setdefault(upload.mode, {})[rel] = upload.data
             for mode, payload in by_mode.items():
-                container.put_archive(path, make_tar(payload, uid=uid, gid=uid, mode=mode))
+                archive = make_tar(payload, uid=uid, gid=uid, mode=mode)
+                retry_docker(
+                    lambda archive=archive, path=path: container.put_archive(path, archive)
+                )
 
     started = time.monotonic()
-    container.start()
+    retry_docker(container.start)
     timed_out = False
     exit_code: int | None = None
     try:
