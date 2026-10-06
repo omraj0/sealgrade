@@ -3,7 +3,7 @@
 All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.1.0] - 2026-10-07
 
 ### Added
 - **Runner tiers**: T0 naive, T1 typical, T2 compat (hardened pytest-in-a-container) and T3 strict

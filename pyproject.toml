@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sealgrade"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Tamper-resistant evaluation runner, exploit corpus and auditor for untrusted, AI-generated code."
 readme = "README.md"
 requires-python = ">=3.11"
