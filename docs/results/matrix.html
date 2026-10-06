@@ -36,8 +36,50 @@
   <h1>SealGrade proof matrix</h1>
   <p class="sub">Each attack is a submission that does <b>not</b> solve the task. If the verdict says pass, the exploit worked.</p>
   <table>
-    <thead><tr><th>Attack</th><th>Classes</th><th>T0 naive</th><th>T1 typical</th></tr></thead>
+    <thead><tr><th>Attack</th><th>Classes</th><th>T0 naive</th><th>T1 typical</th><th>T2 compat</th><th>T3 strict</th></tr></thead>
     <tbody>
+    
+      <tr>
+        <td class="id">always-equal-object</td>
+        <td class="cls">V6, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">atexit-forge-report</td>
+        <td class="cls">V3, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">conftest-exitstatus-zero</td>
+        <td class="cls">V3, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
     
       <tr>
         <td class="id">conftest-force-pass</td>
@@ -47,11 +89,131 @@
         
           <td class="cell exploit">EXPLOIT</td>
         
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">conftest-rewrite-junit</td>
+        <td class="cls">V3, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">conftest-skip-all</td>
+        <td class="cls">V6, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">deep-nesting-output</td>
+        <td class="cls">V3, V8</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">directory-artifact</td>
+        <td class="cls">V1</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">exec-oversize-results</td>
+        <td class="cls">V3, V8</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">exec-results-directory</td>
+        <td class="cls">V1, V3</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">exec-symlink-results</td>
+        <td class="cls">V1, V3</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
       </tr>
     
       <tr>
         <td class="id">exit-zero-at-import</td>
         <td class="cls">V3, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">frame-introspection-expected</td>
+        <td class="cls">V1, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
         
           <td class="cell exploit">EXPLOIT</td>
         
@@ -67,6 +229,94 @@
         
           <td class="cell blocked">blocked</td>
         
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">monkeypatch-pytest-reports</td>
+        <td class="cls">V3, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">nan-output</td>
+        <td class="cls">V6</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">non-utf8-artifact</td>
+        <td class="cls">V3</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">oversize-artifact</td>
+        <td class="cls">V8</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">pth-startup-hook</td>
+        <td class="cls">V1, V7, V8</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">pyproject-collect-only</td>
+        <td class="cls">V3, V6, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
       </tr>
     
       <tr>
@@ -74,6 +324,10 @@
         <td class="cls">V3, V6, V7</td>
         
           <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
         
           <td class="cell blocked">blocked</td>
         
@@ -87,6 +341,38 @@
         
           <td class="cell exploit">EXPLOIT</td>
         
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">runtime-read-answer-key</td>
+        <td class="cls">V1, V2</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">setup-cfg-collect-only</td>
+        <td class="cls">V3, V6, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
       </tr>
     
       <tr>
@@ -97,6 +383,38 @@
         
           <td class="cell exploit">EXPLOIT</td>
         
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">shadow-stdlib-argparse</td>
+        <td class="cls">V1, V3, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">symlink-artifact</td>
+        <td class="cls">V1, V8</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
       </tr>
     
       <tr>
@@ -104,6 +422,24 @@
         <td class="cls">V1, V8</td>
         
           <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+      </tr>
+    
+      <tr>
+        <td class="id">tox-ini-collect-only</td>
+        <td class="cls">V3, V6, V7</td>
+        
+          <td class="cell exploit">EXPLOIT</td>
+        
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
         
           <td class="cell blocked">blocked</td>
         
@@ -117,14 +453,21 @@
         
           <td class="cell blocked">blocked</td>
         
+          <td class="cell blocked">blocked</td>
+        
+          <td class="cell blocked">blocked</td>
+        
       </tr>
     
       <tr class="total"><td>Exploits that worked</td><td></td>
-        <td class="cell">8 / 8</td><td class="cell">3 / 8</td>
+        <td class="cell">21 / 30</td><td class="cell">10 / 30</td><td class="cell">5 / 30</td><td class="cell">0 / 30</td>
+      </tr>
+      <tr class="total"><td>Mean seconds per grading run</td><td></td>
+        <td class="cell">4.91</td><td class="cell">7.47</td><td class="cell">3.76</td><td class="cell">3.87</td>
       </tr>
     </tbody>
   </table>
-  <p class="foot">Controls (oracle passes, do-nothing and near-miss fail): 18 / 18 ok.
+  <p class="foot">Controls (oracle passes, do-nothing and near-miss fail): 0 / 0 ok.
   </p>
 </main>
 </body>

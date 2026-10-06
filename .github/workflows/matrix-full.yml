@@ -1,0 +1,35 @@
+name: Full proof matrix
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"   # Mondays 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - name: Controls on every task and tier
+        run: sealgrade controls --tiers t0,t1,t2,t3 --jobs 4
+      - name: Attack matrix on three tasks
+        run: >-
+          sealgrade matrix --tiers t0,t1,t2,t3
+          --tasks py-slugify,py-roman,py-merge-intervals
+          --no-controls --jobs 4 --check --out results/full
+      - name: Latency
+        run: python tools/bench_latency.py --runs 5 --out results/full/latency.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: proof-matrix
+          path: results/full/

@@ -1,0 +1,54 @@
+site_name: SealGrade
+site_description: Tamper-resistant evaluation runner, exploit corpus and auditor for untrusted, AI-generated code.
+site_url: https://omraj0.github.io/sealgrade/
+repo_url: https://github.com/omraj0/sealgrade
+repo_name: omraj0/sealgrade
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Concepts:
+      - Threat model: THREAT_MODEL.md
+      - Attack taxonomy and credits: TAXONOMY.md
+      - How to write an unhackable eval: HOWTO-unhackable-evals.md
+  - Reference:
+      - Exploit corpus: CORPUS.md
+      - Auditor rules: AUDIT_RULES.md
+  - Results:
+      - Proof matrix: results/matrix.md
+      - Latency: results/latency.md
+      - Mutation scores: results/mutation.md
+  - Decisions:
+      - "ADR 0001: three-container grading": adr/0001-three-container-grading.md
+      - "ADR 0002: compat tier and residual risk": adr/0002-compat-tier-and-residual-risk.md

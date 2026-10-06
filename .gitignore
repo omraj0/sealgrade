@@ -15,3 +15,4 @@ build/
 # generated run output (the committed matrix lives in docs/results/)
 /results/*
 !/results/.gitkeep
+/site/

@@ -1,0 +1,51 @@
+name: "SealGrade audit"
+description: >-
+  Audit evaluation tasks (Harbor / Terminal-Bench style or SealGrade-native) for reward-hacking flaws and
+  produce a SARIF report for GitHub code scanning.
+author: "Om Raj"
+
+branding:
+  icon: shield
+  color: green
+
+inputs:
+  path:
+    description: "A task directory, or a directory containing tasks."
+    required: true
+    default: "."
+  fail-on:
+    description: "Fail the step at or above this severity: high, medium, low or none."
+    required: false
+    default: "high"
+  sarif-file:
+    description: "Where to write the SARIF report."
+    required: false
+    default: "sealgrade.sarif"
+  version:
+    description: "What to pip install: a PyPI specifier such as 'sealgrade>=0.1', or a git URL."
+    required: false
+    default: "git+https://github.com/omraj0/sealgrade@main"
+
+outputs:
+  sarif-file:
+    description: "Path of the SARIF report."
+    value: ${{ steps.audit.outputs.sarif-file }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install SealGrade
+      shell: bash
+      run: python -m pip install --quiet "${{ inputs.version }}"
+    - name: Audit
+      id: audit
+      shell: bash
+      run: |
+        set +e
+        sealgrade audit "${{ inputs.path }}" --format sarif --out "${{ inputs.sarif-file }}" --fail-on "${{ inputs.fail-on }}"
+        status=$?
+        echo "sarif-file=${{ inputs.sarif-file }}" >> "$GITHUB_OUTPUT"
+        exit $status

@@ -2,20 +2,28 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Annotated
 
 import typer
 from rich.console import Console
+from rich.markup import escape
 from rich.table import Table
 
 from sealgrade import __version__
+from sealgrade.audit.engine import audit_path
+from sealgrade.audit.model import AuditReport, Finding, Severity
+from sealgrade.audit.mutation import run_mutation
+from sealgrade.audit.render import to_html, to_json
+from sealgrade.audit.sarif import sarif_text
+from sealgrade.audit.targets import TargetError, find_tasks, load_target
 from sealgrade.matrix import attack_submission, run_controls, run_matrix
 from sealgrade.paths import find_root
-from sealgrade.report import render_html, render_markdown
+from sealgrade.report import matrix_svg, render_html, render_markdown
 from sealgrade.runner import TIERS, get_harness
 from sealgrade.runner.docker_backend import docker_available
-from sealgrade.spec import load_attacks, load_tasks
+from sealgrade.spec import load_attacks, load_task, load_tasks
 
 app = typer.Typer(
     help="Tamper-resistant evaluation runner, exploit corpus and auditor.",
@@ -167,7 +175,144 @@ def matrix(
     _write(out / "matrix.json", result.to_json())
     _write(out / "matrix.md", render_markdown(result))
     _write(out / "matrix.html", render_html(result))
+    _write(out / "matrix.svg", matrix_svg(json.loads(result.to_json())))
     console.print(render_markdown(result))
     console.print(f"Wrote {out / 'matrix.json'}, matrix.md, matrix.html")
     if check and not result.ok:
+        raise typer.Exit(1)
+
+
+def _print_audit_table(reports: list[AuditReport]) -> None:
+    colours = {
+        Severity.HIGH: "red",
+        Severity.MEDIUM: "yellow",
+        Severity.LOW: "cyan",
+        Severity.INFO: "dim",
+    }
+    for report in reports:
+        console.print(f"\n[bold]{escape(report.target)}[/bold] [dim]({report.kind})[/dim]")
+        if not report.findings:
+            console.print("  [green]no findings[/green]")
+        else:
+            table = Table("severity", "rule", "finding", "where", show_lines=False)
+            for f in report.findings:
+                where = f"{f.path}:{f.line}" if f.line else f.path
+                colour = colours[f.severity]
+                table.add_row(
+                    f"[{colour}]{f.severity.label}[/{colour}]",
+                    f.rule_id,
+                    escape(f.title),
+                    escape(where),
+                )
+            console.print(table)
+        if report.mutation:
+            m = report.mutation
+            console.print(
+                f"  mutation score [bold]{m['score'] * 100:.1f}%[/bold] "
+                f"({m['killed']} killed, {m['survived']} survived, {m['invalid']} invalid "
+                f"of {m['mutants']} mutants)"
+            )
+
+
+@app.command("audit")
+def audit(
+    path: Annotated[Path, typer.Argument(help="A task directory, or a directory containing tasks")],
+    fmt: Annotated[
+        str, typer.Option("--format", "-f", help="table, json, sarif or html")
+    ] = "table",
+    out: Annotated[Path | None, typer.Option("--out", "-o", help="Write the report here")] = None,
+    fail_on: Annotated[
+        str,
+        typer.Option("--fail-on", help="Exit 1 at or above this severity: high, medium, low, none"),
+    ] = "high",
+    mutation: Annotated[
+        bool, typer.Option("--mutation", help="Also compute a mutation score (SealGrade tasks)")
+    ] = False,
+    mutants: Annotated[int, typer.Option("--mutants", min=10, max=1000)] = 120,
+    dynamic: Annotated[
+        str,
+        typer.Option("--dynamic", help="Also run the exploit corpus on these tiers, e.g. t0,t1"),
+    ] = "",
+    jobs: JobsOpt = 2,
+) -> None:
+    """Audit task directories for the reward-hacking flaw classes (static rules, plus optional
+    mutation scoring and a dynamic run of the exploit corpus)."""
+    if fmt not in ("table", "json", "sarif", "html"):
+        raise typer.BadParameter("format must be table, json, sarif or html")
+    threshold = None if fail_on == "none" else Severity.parse(fail_on)
+    try:
+        reports = audit_path(path)
+    except TargetError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    if not reports:
+        console.print(f"[red]No tasks found under {path}[/red]")
+        raise typer.Exit(2)
+
+    task_dirs = {load_target(d).task_id: d for d in find_tasks(path)}
+    if mutation or dynamic:
+        for report in reports:
+            target = load_target(task_dirs[report.target])
+            if target.kind != "sealgrade":
+                continue
+            task = load_task(task_dirs[report.target])
+            if mutation:
+                result = run_mutation(task, max_mutants=mutants, jobs=jobs)
+                report.mutation = result.as_dict()
+                if result.score < 0.9 and result.survived:
+                    report.findings.append(
+                        Finding(
+                            "SG027",
+                            Severity.MEDIUM,
+                            "Weak verifier: low mutation score",
+                            f"{result.survived} of {result.killed + result.survived} plausible "
+                            "bugs "
+                            "in the reference solution pass every case "
+                            f"({result.score * 100:.1f}% killed).",
+                            "cases.jsonl",
+                            0,
+                            ("V6",),
+                        )
+                    )
+            if dynamic:
+                _need_docker()
+                tiers = _tiers(dynamic)
+                matrix_result = run_matrix(
+                    tiers,
+                    [task],
+                    [a for a in load_attacks(find_root() / "corpus") if a.kind == "exploit"],
+                    with_controls=False,
+                    jobs=jobs,
+                )
+                for attack in matrix_result.attacks:
+                    for tier in tiers:
+                        if matrix_result.observed(attack.id, tier) == "exploit":
+                            report.findings.append(
+                                Finding(
+                                    "SG028",
+                                    Severity.HIGH,
+                                    f"Exploit succeeds on {tier}: {attack.id}",
+                                    attack.title,
+                                    "",
+                                    0,
+                                    tuple(attack.classes),
+                                )
+                            )
+            report.findings.sort(key=lambda f: (-int(f.severity), f.rule_id, f.path, f.line))
+
+    if fmt == "table":
+        _print_audit_table(reports)
+    else:
+        text = {"json": to_json, "sarif": sarif_text, "html": to_html}[fmt](reports)
+        if out:
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text, encoding="utf-8", newline="\n")
+            console.print(f"Wrote {out}")
+        else:
+            typer.echo(text)
+    if fmt == "table" and out:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(to_json(reports), encoding="utf-8", newline="\n")
+    worst = max((r.max_severity() or Severity.INFO for r in reports), default=Severity.INFO)
+    any_findings = any(r.findings for r in reports)
+    if threshold is not None and any_findings and worst >= threshold:
         raise typer.Exit(1)

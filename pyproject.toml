@@ -38,6 +38,10 @@ dev = [
   "ruff>=0.6",
   "mypy>=1.11",
 ]
+docs = [
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.5",
+]
 
 [project.scripts]
 sealgrade = "sealgrade.cli:app"
@@ -47,6 +51,7 @@ packages = ["src/sealgrade"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["tests"]
 addopts = "-ra"
 markers = [
   "docker: needs a running Docker daemon (skipped automatically when none is reachable)",
@@ -61,6 +66,12 @@ extend-exclude = ["corpus", "tasks"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/sealgrade/report/render.py" = ["E501"]  # inline HTML/CSS template
+"src/sealgrade/audit/render.py" = ["E501"]  # inline HTML/CSS template
+"src/sealgrade/audit/rules.py" = ["E501"]  # human-readable finding messages
+"tests/audit_fixtures.py" = ["E501"]  # embedded shell scripts
+"src/sealgrade/report/svg.py" = ["E501"]  # inline SVG markup
+"tools/mutation_table.py" = ["E501"]  # prose in the generated page
+"tests/test_docker_tiers.py" = ["E501"]  # module docstring with a command line
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]

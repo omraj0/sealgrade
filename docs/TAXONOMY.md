@@ -42,20 +42,24 @@ BenchJack's auditor; we do not replace it.
 
 ## How the corpus maps to them
 
-Attack ids are folder names under `corpus/`. This table grows with the corpus.
+The corpus has 30 attacks (21 exploits and 9 boundary probes). The full list with each attack's classes and
+documented outcome per tier is generated from the manifests in [CORPUS.md](CORPUS.md). In short:
 
-| Attack | Classes | What it does |
-|---|---|---|
-| `conftest-force-pass` | V3, V7 | `conftest.py` hook rewrites every test outcome to passed |
-| `shadow-pytest-forge-report` | V1, V3, V7 | a fake `pytest` package forges a passing report |
-| `pytest-ini-collect-only` | V3, V6, V7 | `pytest.ini` switches to `--collect-only`, which exits 0 |
-| `exit-zero-at-import` | V3, V7 | the solution prints a success line and exits 0 on import |
-| `read-answer-key-hardcode` | V2 | reads the answer key in the sandbox and builds a lookup table |
-| `tamper-tests-in-place` | V1, V8 | overwrites the test file in a shared container |
-| `lingering-reward-writer` | V1, V7 | a detached process keeps rewriting the reward file |
-| `trojan-python-binary` | V1, V7, V8 | replaces `python` on `PATH` with a script that exits 0 |
+| Class | Covered by |
+|---|---|
+| V1 isolation failure | `tamper-tests-in-place`, `lingering-reward-writer`, `shadow-stdlib-argparse`, `pth-startup-hook`, `trojan-python-binary`, `frame-introspection-expected` |
+| V2 answers shipped with the test | `read-answer-key-hardcode`, `runtime-read-answer-key` |
+| V3 execution into the evaluator | `conftest-*`, `*-collect-only`, `atexit-forge-report`, `monkeypatch-pytest-reports` |
+| V4 LLM-judge injection | not exercised by the runner (it has no LLM judge); the auditor flags it (SG020) |
+| V5 weak string matching | not a runner property; the auditor flags substring checks and loose tolerances (SG015, SG016) |
+| V6 evaluation-logic gaps | `always-equal-object`, `conftest-skip-all`, `pytest-ini-collect-only`, `nan-output` |
+| V7 trusting untrusted output | `exit-zero-at-import`, `conftest-rewrite-junit`, `atexit-forge-report` |
+| V8 excessive permissions | `trojan-python-binary`, `tamper-tests-in-place`, `pth-startup-hook`, the artifact probes |
+
+V4 and V5 are properties of how a *task* scores, not of the harness that runs it, so they are covered by
+auditor rules (and by the mutation score) rather than by runner attacks.
 
 ## Using this responsibly
 
 The payloads are written as test fixtures against SealGrade's own harness tiers. Do not point
-them at systems you do not own or have permission to test. See [SECURITY.md](../SECURITY.md).
+them at systems you do not own or have permission to test. See [the security policy](https://github.com/omraj0/sealgrade/blob/main/SECURITY.md).
