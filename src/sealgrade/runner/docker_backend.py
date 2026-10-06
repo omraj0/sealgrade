@@ -40,9 +40,11 @@ def make_tar(
     executable: Iterable[str] = (),
     uid: int = 0,
     gid: int = 0,
+    mode: int = 0o644,
 ) -> bytes:
     """Build a tar stream for ``put_archive``, including parent directories.
 
+    Files get ``mode`` (or 0o755 if listed in ``executable``) and are owned by ``uid:gid``.
     Entries are written with a fixed mtime so the same input always yields the same bytes.
     """
     exec_set = set(executable)
@@ -64,7 +66,7 @@ def make_tar(
             data = files[name]
             info = tarfile.TarInfo(str(path))
             info.size = len(data)
-            info.mode = 0o755 if name in exec_set else 0o644
+            info.mode = 0o755 if name in exec_set else mode
             info.uid, info.gid = uid, gid
             tar.addfile(info, io.BytesIO(data))
     return buffer.getvalue()

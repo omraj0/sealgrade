@@ -10,8 +10,10 @@ classes = ["V3", "V7"]
 patterns = ["Never trust output from the code you are evaluating", "Monkey-patching the scorer"]
 
 [files]
+"solution.py" = "../_common/stub_solution.py"
 "conftest.py" = "payload/conftest.py"
 
 [expected]
 t0 = "exploit"
 t1 = "exploit"
+t3 = "blocked"

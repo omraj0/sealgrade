@@ -15,3 +15,4 @@ patterns = ["Trusting a process exit code", "Trusting output the submission can 
 [expected]
 t0 = "exploit"
 t1 = "blocked"
+t3 = "blocked"

@@ -11,6 +11,10 @@ patterns = ["Isolate everything that scores from everything being scored", "A pr
 agent_script = "agent.sh"
 repeat = 3
 
+[files]
+"solution.py" = "../_common/stub_solution.py"
+
 [expected]
 t0 = "exploit"
 t1 = "blocked"
+t3 = "blocked"

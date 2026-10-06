@@ -24,6 +24,7 @@ app = typer.Typer(
 )
 console = Console()
 
+JobsOpt = Annotated[int, typer.Option("--jobs", "-j", min=1, max=8, help="Parallel grading runs")]
 TiersOpt = Annotated[str, typer.Option("--tiers", "-t", help="Comma-separated tiers, e.g. t0,t1")]
 
 
@@ -103,7 +104,7 @@ def run_one(
 
 
 @app.command("controls")
-def controls(tiers: TiersOpt = "t0,t1") -> None:
+def controls(tiers: TiersOpt = "t0,t1", jobs: JobsOpt = 1) -> None:
     """Check that each tier passes the oracle and fails a do-nothing and a near-miss submission."""
     _need_docker()
     tasks = load_tasks(find_root() / "tasks")
@@ -139,6 +140,7 @@ def matrix(
     only_tasks: Annotated[
         str, typer.Option("--tasks", help="Comma-separated task ids to run (default: all)")
     ] = "",
+    jobs: JobsOpt = 1,
 ) -> None:
     """Run attacks on tasks for the chosen tiers and write the proof matrix."""
     _need_docker()
@@ -159,6 +161,7 @@ def matrix(
         [a for a in all_attacks if not attack_filter or a.id in attack_filter],
         with_controls=not no_controls,
         progress=lambda m: console.print(f"[dim]{m}[/dim]"),
+        jobs=jobs,
     )
     out.mkdir(parents=True, exist_ok=True)
     _write(out / "matrix.json", result.to_json())

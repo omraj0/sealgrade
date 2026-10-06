@@ -27,6 +27,12 @@ def render_markdown(result: MatrixResult) -> str:
         exploited, measured = result.exploit_counts()[tier]
         totals.append(f"**{exploited} / {measured}**")
     lines.append("| " + " | ".join(totals) + " |")
+    latency = result.mean_latency()
+    if latency:
+        cells = ["Mean seconds per grading run", ""] + [
+            f"{latency.get(t, 0):.1f}" for t in result.tiers
+        ]
+        lines.append("| " + " | ".join(cells) + " |")
     lines.append("")
     controls_ok = sum(1 for c in result.controls if c.ok)
     lines.append(
@@ -94,6 +100,9 @@ _HTML = """\
       <tr class="total"><td>Exploits that worked</td><td></td>
         {% for t in tiers %}<td class="cell">{{ totals[t][0] }} / {{ totals[t][1] }}</td>{% endfor %}
       </tr>
+      <tr class="total"><td>Mean seconds per grading run</td><td></td>
+        {% for t in tiers %}<td class="cell">{{ latency.get(t, 0) }}</td>{% endfor %}
+      </tr>
     </tbody>
   </table>
   <p class="foot">Controls (oracle passes, do-nothing and near-miss fail): {{ controls_ok }} / {{ controls_total }} ok.
@@ -127,6 +136,7 @@ def render_html(result: MatrixResult) -> str:
         labels=TIER_LABELS,
         rows=rows,
         totals=result.exploit_counts(),
+        latency=result.mean_latency(),
         controls_ok=sum(1 for c in result.controls if c.ok),
         controls_total=len(result.controls),
         mismatches=result.mismatches(),

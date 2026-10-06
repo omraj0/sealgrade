@@ -10,9 +10,10 @@ Outcome vocabulary for one attack on one tier, across every task and repeat:
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
-from typing import Literal
+from typing import Literal, TypeVar
 
 from sealgrade.runner import Harness, Submission, get_harness
 from sealgrade.spec.attack import AttackSpec
@@ -87,6 +88,15 @@ class MatrixResult:
             counts[tier] = (sum(1 for s in measured if s == "exploit"), len(measured))
         return counts
 
+    def mean_latency(self) -> dict[str, float]:
+        """Mean seconds per grading run, per tier (attack runs only)."""
+        out: dict[str, float] = {}
+        for tier in self.tiers:
+            times = [c.elapsed_sec for c in self.cells if c.tier == tier]
+            if times:
+                out[tier] = round(sum(times) / len(times), 2)
+        return out
+
     def control_failures(self) -> list[ControlResult]:
         return [c for c in self.controls if not c.ok]
 
@@ -111,6 +121,7 @@ class MatrixResult:
             ],
             "cells": [asdict(c) for c in self.cells],
             "controls": [{**asdict(c), "ok": c.ok} for c in self.controls],
+            "mean_latency_sec": self.mean_latency(),
             "exploit_counts": {
                 t: {"exploited": e, "measured": m} for t, (e, m) in self.exploit_counts().items()
             },
@@ -120,6 +131,17 @@ class MatrixResult:
 
 
 ProgressFn = Callable[[str], None]
+
+T = TypeVar("T")
+R = TypeVar("R")
+
+
+def _map(fn: Callable[[T], R], items: Sequence[T], jobs: int) -> list[R]:
+    """``map`` that preserves order and can run ``jobs`` grading runs at a time."""
+    if jobs <= 1 or len(items) <= 1:
+        return [fn(item) for item in items]
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        return list(pool.map(fn, items))
 
 
 def grade_many(
@@ -135,25 +157,42 @@ def attack_submission(attack: AttackSpec) -> Submission:
     return Submission(name=attack.id, files=attack.payload_files(), script=attack.script_bytes())
 
 
+ControlKind = Literal["oracle", "noop", "near_miss"]
+
+
 def run_controls(
-    tiers: Iterable[str], tasks: Iterable[TaskSpec], progress: ProgressFn | None = None
+    tiers: Iterable[str],
+    tasks: Iterable[TaskSpec],
+    progress: ProgressFn | None = None,
+    jobs: int = 1,
 ) -> list[ControlResult]:
     """Oracle must pass, a do-nothing submission and a near-miss must fail, on every tier."""
-    results: list[ControlResult] = []
-    for tier in tiers:
-        harness = get_harness(tier)
+    harnesses = {tier: get_harness(tier) for tier in tiers}
+    plan: list[tuple[str, TaskSpec, ControlKind, Submission, float]] = []
+    for tier in harnesses:
         for task in tasks:
-            plan: list[tuple[Literal["oracle", "noop", "near_miss"], Submission, float]] = [
-                ("oracle", Submission("oracle", files=task.oracle_files()), 1.0),
-                ("noop", Submission("noop"), 0.0),
-                ("near_miss", Submission("near-miss", files=task.near_miss_files()), 0.0),
-            ]
-            for name, submission, expected in plan:
-                if progress:
-                    progress(f"control {name} / {task.id} / {tier}")
-                verdict = harness.grade(task, submission)
-                results.append(ControlResult(task.id, tier, name, verdict.reward, expected))
-    return results
+            plan.append(
+                (tier, task, "oracle", Submission("oracle", files=task.oracle_files()), 1.0)
+            )
+            plan.append((tier, task, "noop", Submission("noop"), 0.0))
+            plan.append(
+                (
+                    tier,
+                    task,
+                    "near_miss",
+                    Submission("near-miss", files=task.near_miss_files()),
+                    0.0,
+                )
+            )
+
+    def run_one(item: tuple[str, TaskSpec, ControlKind, Submission, float]) -> ControlResult:
+        tier, task, kind, submission, expected = item
+        if progress:
+            progress(f"control {kind} / {task.id} / {tier}")
+        verdict = harnesses[tier].grade(task, submission)
+        return ControlResult(task.id, tier, kind, verdict.reward, expected)
+
+    return _map(run_one, plan, jobs)
 
 
 def run_matrix(
@@ -163,19 +202,23 @@ def run_matrix(
     *,
     with_controls: bool = True,
     progress: ProgressFn | None = None,
+    jobs: int = 1,
 ) -> MatrixResult:
     result = MatrixResult(tiers=tiers, attacks=attacks)
-    for tier in tiers:
-        harness = get_harness(tier)
-        for attack in attacks:
-            submission = attack_submission(attack)
-            for task in tasks:
-                if progress:
-                    progress(f"{attack.id} / {task.id} / {tier}")
-                successes, mean_sec = grade_many(harness, task, submission, attack.repeat)
-                result.cells.append(
-                    Cell(task.id, attack.id, tier, successes, attack.repeat, round(mean_sec, 3))
-                )
+    harnesses = {tier: get_harness(tier) for tier in tiers}
+    submissions = {attack.id: attack_submission(attack) for attack in attacks}
+    plan = [(tier, attack, task) for tier in tiers for attack in attacks for task in tasks]
+
+    def run_one(item: tuple[str, AttackSpec, TaskSpec]) -> Cell:
+        tier, attack, task = item
+        if progress:
+            progress(f"{attack.id} / {task.id} / {tier}")
+        successes, mean_sec = grade_many(
+            harnesses[tier], task, submissions[attack.id], attack.repeat
+        )
+        return Cell(task.id, attack.id, tier, successes, attack.repeat, round(mean_sec, 3))
+
+    result.cells = _map(run_one, plan, jobs)
     if with_controls:
-        result.controls = run_controls(tiers, tasks, progress)
+        result.controls = run_controls(tiers, tasks, progress, jobs)
     return result

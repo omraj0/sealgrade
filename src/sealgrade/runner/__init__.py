@@ -5,10 +5,12 @@ from __future__ import annotations
 from sealgrade.runner.models import Harness, Submission, Verdict
 from sealgrade.runner.tier_t0 import T0Naive
 from sealgrade.runner.tier_t1 import T1Typical
+from sealgrade.runner.tier_t3 import T3Strict
 
 TIERS: dict[str, type[Harness]] = {
     "t0": T0Naive,
     "t1": T1Typical,
+    "t3": T3Strict,
 }
 
 TIER_LABELS = {

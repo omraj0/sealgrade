@@ -10,8 +10,10 @@ classes = ["V3", "V6", "V7"]
 patterns = ["Trusting a process exit code", "Test the tests, not just the submissions"]
 
 [files]
+"solution.py" = "../_common/stub_solution.py"
 "pytest.ini" = "payload/pytest.ini"
 
 [expected]
 t0 = "exploit"
 t1 = "blocked"
+t3 = "blocked"

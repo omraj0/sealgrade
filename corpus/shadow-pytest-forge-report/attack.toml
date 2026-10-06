@@ -11,9 +11,11 @@ classes = ["V1", "V3", "V7"]
 patterns = ["Isolate everything that scores from everything being scored", "Never trust output from the code you are evaluating"]
 
 [files]
+"solution.py" = "../_common/stub_solution.py"
 "pytest/__init__.py" = "payload/pytest/__init__.py"
 "pytest/__main__.py" = "payload/pytest/__main__.py"
 
 [expected]
 t0 = "exploit"
 t1 = "exploit"
+t3 = "blocked"

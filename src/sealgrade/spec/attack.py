@@ -85,7 +85,16 @@ class AttackSpec(BaseModel):
         return (self.root / self.agent_script).read_bytes()
 
     def payload_files(self) -> dict[str, bytes]:
-        return {dest: (self.root / src).read_bytes() for dest, src in self.files.items()}
+        """Payload bytes by destination. Sources may live in this folder or in a sibling such as
+        ``../_common``, but never outside the corpus directory."""
+        corpus = self.root.parent.resolve()
+        files: dict[str, bytes] = {}
+        for dest, src in self.files.items():
+            path = (self.root / src).resolve()
+            if corpus not in path.parents:
+                raise ValueError(f"{self.id}: payload source escapes the corpus: {src!r}")
+            files[dest] = path.read_bytes()
+        return files
 
 
 def load_attack(path: Path) -> AttackSpec:

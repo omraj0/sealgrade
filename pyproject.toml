@@ -74,3 +74,8 @@ files = ["src/sealgrade"]
 [[tool.mypy.overrides]]
 module = ["docker", "docker.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# Runs inside a Linux container; uses POSIX-only signal APIs that mypy on Windows does not model.
+module = ["sealgrade.runner.guest.sg_exec"]
+disable_error_code = ["attr-defined"]

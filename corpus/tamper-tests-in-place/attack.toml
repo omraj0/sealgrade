@@ -10,6 +10,10 @@ classes = ["V1", "V8"]
 patterns = ["Isolate everything that scores from everything being scored", "Excessive permissions"]
 agent_script = "agent.sh"
 
+[files]
+"solution.py" = "../_common/stub_solution.py"
+
 [expected]
 t0 = "exploit"
 t1 = "blocked"
+t3 = "blocked"

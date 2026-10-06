@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol
+from typing import Any, Protocol
 
 from sealgrade.spec.task import TaskSpec
 
@@ -26,6 +26,7 @@ class Verdict:
     reward: float
     detail: str = ""
     elapsed_sec: float = 0.0
+    record: dict[str, Any] | None = None  # signed provenance (strict tier only)
 
     @property
     def passed(self) -> bool:
