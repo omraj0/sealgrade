@@ -1,0 +1,15 @@
+[task]
+id = "py-slugify"
+title = "Turn text into a URL slug"
+instruction = "instruction.md"
+
+[agent]
+workdir = "/work"
+artifacts = ["solution.py"]
+timeout_sec = 60
+
+[judge]
+kind = "function"
+module = "solution"
+function = "slugify"
+cases = "cases.jsonl"

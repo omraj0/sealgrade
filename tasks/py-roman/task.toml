@@ -1,0 +1,15 @@
+[task]
+id = "py-roman"
+title = "Integer to Roman numeral"
+instruction = "instruction.md"
+
+[agent]
+workdir = "/work"
+artifacts = ["solution.py"]
+timeout_sec = 60
+
+[judge]
+kind = "function"
+module = "solution"
+function = "to_roman"
+cases = "cases.jsonl"

@@ -1,0 +1,60 @@
+{"args": ["Hello, World!"], "expected": "hello-world"}
+{"args": ["  Cr\u00e8me br\u00fbl\u00e9e  "], "expected": "creme-brulee"}
+{"args": ["already-a-slug"], "expected": "already-a-slug"}
+{"args": ["---leading and trailing---"], "expected": "leading-and-trailing"}
+{"args": ["Multiple     spaces\tand\ttabs"], "expected": "multiple-spaces-and-tabs"}
+{"args": ["\u00c0\u00c9\u00ce\u00d5\u00dc \u00f1 \u00e7 \u00df"], "expected": "aeiou-n-c"}
+{"args": ["100% pure_python 3.12"], "expected": "100-pure-python-3-12"}
+{"args": [""], "expected": ""}
+{"args": ["   "], "expected": ""}
+{"args": ["!!!"], "expected": ""}
+{"args": ["\u65e5\u672c\u8a9e only"], "expected": "only"}
+{"args": ["Mixed \u65e5\u672c\u8a9e and English"], "expected": "mixed-and-english"}
+{"args": ["snake_case_to-slug"], "expected": "snake-case-to-slug"}
+{"args": ["UPPER lower MiXeD"], "expected": "upper-lower-mixed"}
+{"args": ["a"], "expected": "a"}
+{"args": ["-"], "expected": ""}
+{"args": ["x - y"], "expected": "x-y"}
+{"args": ["emoji \ud83d\ude80 launch"], "expected": "emoji-launch"}
+{"args": ["na\u00efve caf\u00e9 d\u00e9j\u00e0 vu"], "expected": "naive-cafe-deja-vu"}
+{"args": ["tabs\nand\nnewlines"], "expected": "tabs-and-newlines"}
+{"args": [" Beta!42!\u00e9psilon!\u00e9psilon "], "expected": "beta-42-epsilon-epsilon"}
+{"args": ["42 iota 7up iota alpha "], "expected": "42-iota-7up-iota-alpha"}
+{"args": ["-Beta?!"], "expected": "beta"}
+{"args": [" Delta/alpha/Beta "], "expected": "delta-alpha-beta"}
+{"args": ["!!gamma gamma"], "expected": "gamma-gamma"}
+{"args": ["!!7up "], "expected": "7up"}
+{"args": [" Beta-\u00d1and\u00fa-th\u00e9ta-"], "expected": "beta-nandu-theta"}
+{"args": ["!!alpha iota "], "expected": "alpha-iota"}
+{"args": ["Beta & Beta?!"], "expected": "beta-beta"}
+{"args": ["-alpha  \u00d1and\u00fa-"], "expected": "alpha-nandu"}
+{"args": ["!!alpha-\u00e9psilon-\u00e9psilon-th\u00e9ta-gamma"], "expected": "alpha-epsilon-epsilon-theta-gamma"}
+{"args": ["Beta!th\u00e9ta"], "expected": "beta-theta"}
+{"args": [" 42!Delta!th\u00e9ta!\u00e9psilon"], "expected": "42-delta-theta-epsilon"}
+{"args": ["!!Beta"], "expected": "beta"}
+{"args": ["gamma  --  Delta  --  kappa  --  \u00e9psilon"], "expected": "gamma-delta-kappa-epsilon"}
+{"args": ["7up/gamma/alpha/\u00d1and\u00fa"], "expected": "7up-gamma-alpha-nandu"}
+{"args": ["Beta & th\u00e9ta & kappa "], "expected": "beta-theta-kappa"}
+{"args": ["th\u00e9ta & Delta & iota?!"], "expected": "theta-delta-iota"}
+{"args": ["-iota iota th\u00e9ta 42 42-"], "expected": "iota-iota-theta-42-42"}
+{"args": ["Beta & Delta & th\u00e9ta & Beta-"], "expected": "beta-delta-theta-beta"}
+{"args": ["!!th\u00e9ta \u00d1and\u00fa Beta th\u00e9ta gamma?!"], "expected": "theta-nandu-beta-theta-gamma"}
+{"args": [" th\u00e9ta?!"], "expected": "theta"}
+{"args": [" zeta, 7up, 42, Beta"], "expected": "zeta-7up-42-beta"}
+{"args": ["-alpha, iota, \u00d1and\u00fa, alpha?!"], "expected": "alpha-iota-nandu-alpha"}
+{"args": ["iota!Delta!42!7up!kappa "], "expected": "iota-delta-42-7up-kappa"}
+{"args": ["!!42. 7up. Beta. gamma"], "expected": "42-7up-beta-gamma"}
+{"args": ["\u00e9psilon!th\u00e9ta!Delta!\u00d1and\u00fa!42-"], "expected": "epsilon-theta-delta-nandu-42"}
+{"args": ["!!\u00d1and\u00fa  --  Delta?!"], "expected": "nandu-delta"}
+{"args": ["!!Delta  \u00e9psilon-"], "expected": "delta-epsilon"}
+{"args": ["!!\u00d1and\u00fa \u00e9psilon Beta \u00d1and\u00fa \u00e9psilon "], "expected": "nandu-epsilon-beta-nandu-epsilon"}
+{"args": [" iota_gamma_iota "], "expected": "iota-gamma-iota"}
+{"args": [" \u00e9psilon & Delta & th\u00e9ta & Delta?!"], "expected": "epsilon-delta-theta-delta"}
+{"args": ["!!alpha?!"], "expected": "alpha"}
+{"args": ["-7up & Beta"], "expected": "7up-beta"}
+{"args": [" Delta"], "expected": "delta"}
+{"args": ["-iota/gamma "], "expected": "iota-gamma"}
+{"args": ["\u00d1and\u00fa  --  alpha "], "expected": "nandu-alpha"}
+{"args": ["!!alpha Beta?!"], "expected": "alpha-beta"}
+{"args": ["Delta/iota "], "expected": "delta-iota"}
+{"args": ["!!iota. 42. iota-"], "expected": "iota-42-iota"}
